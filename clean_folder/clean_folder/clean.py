@@ -4,7 +4,6 @@ import os
 import shutil
 from random import randint
 
-
 def normalize(name):
     dict = {ord('А'): 'A',ord('а'): 'a',ord('Q'): 'Q',ord('q'): 'q',
            ord('Б'): 'B',ord('б'): 'B',ord('W'): 'W',ord('w'): 'w',

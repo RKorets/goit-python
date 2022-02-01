@@ -11,4 +11,3 @@ setup (
     description="Clean folder script",
 )
 
-
