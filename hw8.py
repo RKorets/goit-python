@@ -41,5 +41,4 @@ users = {
     "Operato": datetime(year=1998, month=3, day=3)
 }
 
-
 get_birthdays_per_week(users)
