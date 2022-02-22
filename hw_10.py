@@ -122,7 +122,7 @@ def handler(commands):
               "\nshow - Show all contact in addressbook"
               "\ndelete [name] [phone] - Delete phone number is select contact"
               "\nmore [name] [phone]- Add more phone number is select contact"
-              "\nchange [name] [phone] - Change phone number is select contact")
+              "\nchange [name] [phone] [new phone] - Change phone number is select contact")
 
     COMMAND = {
         "hello": hello,
