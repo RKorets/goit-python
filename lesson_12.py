@@ -41,19 +41,22 @@ class Birthday(Field):
 
     @values.setter
     def values(self, new_value):
-        if len(list(new_value)) == 10 and int(new_value[0:4]) > 0 and int(new_value[5:7]) > 0 and int(
-                new_value[8:10]) > 0:
+        if len(list(new_value)) == 10 and \
+                int(new_value[0:4]) > 0 and \
+                int(new_value[5:7]) > 0 and \
+                int(new_value[8:10]) > 0:
             self.value = new_value
         else:
-            print('Incorect data format! Data is not add')
+            print('Incorect data format!Need format yyyy-mm-dd. Data is not add')
             self.value = "Not found"
             return
 
 
 class Record:
+
     def __init__(self, name: Name, phone: Phone, birthday=None) -> None:
         self.name = name
-        self.phones = []  # спиисок экземпляр класа Phone
+        self.phones = []
         self.phones.append(phone)
         self.birthday = birthday
 
@@ -77,19 +80,19 @@ class Record:
             print("Birthday not found")
 
     def delete_phone(self, phone: Phone):
-        for el in self.phones:
-            if phone == el.value:
-                self.phones.remove(el)
+        for contact_phone in self.phones:
+            if phone == contact_phone.value:
+                self.phones.remove(contact_phone)
                 return
         print("Error number")
 
     def change_phone(self, phone: Phone, new_phone: Phone):
         if new_phone.value == "":
             return
-        for el in self.phones:
-            if phone == el.value:
+        for contact_phone in self.phones:
+            if phone == contact_phone.value:
                 self.add_phone(new_phone)
-                self.phones.remove(el)
+                self.phones.remove(contact_phone)
                 return
         print("Error number")
 
@@ -99,12 +102,11 @@ class Record:
 
 class AddressBook(UserDict):
 
-    def add_record(self, *args):
-        for item in args:
-            for el in self.data:
-                if item.name.value == el.value:
-                    return print("Сontact with this name exists")
-            self.data[item.name] = item
+    def add_record(self, args):
+        for contact_name in self.data:
+            if args.name.value == contact_name.value:
+                return print("Сontact with this name exists")
+        self.data[args.name] = args
 
     def iterator(self):
         def it():
@@ -114,10 +116,13 @@ class AddressBook(UserDict):
                 default = iter
                 iter += int(input("Enter'[number]' for see more next records or press 'e' for exit: "))
                 yield "\n".join(result[default:iter])
-
         all_contact = it()
         while True:
             print(next(all_contact))
+
+    def find(self,item):
+        result = [str(v) for v in self.data.values() if item in str(v)]
+        print("\n".join(result))
 
     def __str__(self) -> str:
         result = "\n".join([str(v) for v in self.data.values()])
@@ -146,10 +151,10 @@ def input_error(func):
             print("Exit")
         except StopIteration:
             print("No more contacts")
-
     return verification
 
 
+#file open or create new
 try:
     file = open('contact_book.dat', 'rb')
     CONTACT = pickle.load(file)
@@ -165,18 +170,29 @@ except FileNotFoundError:
 # ne = Birthday()
 # ne.value = "2020-05-01"
 # rec3 = Record(Name("Nasa"), Phone("1122"), ne)
-# CONTACT.add_record(rec5, rec1, rec2, rec3)
-
+# CONTACT.add_record(rec1)
+# CONTACT.add_record(rec5)
+# CONTACT.add_record(rec2)
+# CONTACT.add_record(rec3)
 
 @input_error
 def handler(commands):
     def new_user():
         phon = Phone()
         phon.values = commands[2]
-        br = Birthday()
-        br.values = commands[3]
-        record = Record(Name(commands[1]), phon, br)
+        birthdays = Birthday()
+        birthdays.values = commands[3]
+        record = Record(Name(commands[1]), phon, birthdays)
         CONTACT.add_record(record)
+
+    def add_more_number():
+        for name in CONTACT:
+            if str(name) == commands[1]:
+                phon = Phone()
+                phon.values = commands[2]
+                CONTACT.data[name].add_phone(phon)
+                return
+        print("Error name")
 
     def change():
         for name in CONTACT:
@@ -184,6 +200,13 @@ def handler(commands):
                 phon = Phone()
                 phon.values = commands[3]
                 CONTACT.data[name].change_phone(commands[2], phon)
+                return
+        print("Error name")
+
+    def delete_number():
+        for name in CONTACT:
+            if str(name) == commands[1]:
+                CONTACT.data[name].delete_phone(commands[2])
                 return
         print("Error name")
 
@@ -200,45 +223,35 @@ def handler(commands):
     def show_all():
         print(CONTACT)
 
-    def delete_number():
-        for name in CONTACT:
-            if str(name) == commands[1]:
-                CONTACT.data[name].delete_phone(commands[2])
-                return
-        print("Error name")
-
     def pages_look():
         CONTACT.iterator()
 
-    def add_more_number():
-        for name in CONTACT:
-            if str(name) == commands[1]:
-                phon = Phone()
-                phon.values = commands[2]
-                CONTACT.data[name].add_phone(phon)
-                return
-        print("Error name")
+    def find():
+        CONTACT.find(commands[1])
 
     def helps():
         print("hello - Welcome command"
               "\nhelp - Help command"
-              "\nadd [name] [phone]- Add new contact in addressbook"
+              "\nfind [search] - Find all name,number or birthday"
+              "\nadd [name] [phone] [birthday]- Add new contact in addressbook"
               "\nshow - Show all contact in addressbook"
               "\npages - Page view of contacts"
+              "\nbirthday [name] - shows how many days before the birthday"
               "\ndelete [name] [phone] - Delete phone number is select contact"
               "\nmore [name] [phone]- Add more phone number is select contact"
-              "\nchange [name] [phone] - Change phone number is select contact")
+              "\nchange [name] [old phone] [new phone]- Change phone number is select contact")
 
     COMMAND = {
+        "find": find,
+        "help": helps,
         "hello": hello,
         "add": new_user,
         "show": show_all,
-        "delete": delete_number,
-        "more": add_more_number,
-        "help": helps,
+        "change": change,
         "pages": pages_look,
         "birthday": birthday,
-        "change": change
+        "delete": delete_number,
+        "more": add_more_number
     }[commands[0]]()
     return
 
@@ -259,5 +272,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#07/03 17:04 save
