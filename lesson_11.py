@@ -216,6 +216,7 @@ def handler(commands):
               "\nadd [name] [phone]- Add new contact in addressbook"
               "\nshow - Show all contact in addressbook"
               "\npages - Page view of contacts"
+              "\nbirthday [name] - shows how many days before the birthday"
               "\ndelete [name] [phone] - Delete phone number is select contact"
               "\nmore [name] [phone]- Add more phone number is select contact"
               "\nchange [name] [phone] - Change phone number is select contact")
