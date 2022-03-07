@@ -53,9 +53,9 @@ class AddressBook(UserDict):
     # def add_record(self, *args):
     #     for item in args:
     #         self.data[item.name] = item
-    def add_record(self, *args):
-        for item in args:
-            for el in self.data.keys():
+    def add_record(self, item):
+       # for item in args:
+            for el in self.data:
                 if item.name.value in el.value:
                     return print("Сontact with this name exists")
             self.data[item.name] = item
@@ -89,6 +89,18 @@ def input_error(func):
 
 
 CONTACT = AddressBook()
+
+#test contact
+rec1 = Record(Name("Roma"), Phone("23331"))
+rec5 = Record(Name("Vasua"), Phone("231"))
+rec2 = Record(Name("Dima"), Phone("3123"))
+rec3 = Record(Name("Nasa"), Phone("1122"))
+rec4 = Record(Name("Nasa"), Phone("1122")) #дубль  
+CONTACT.add_record(rec1)
+CONTACT.add_record(rec5)
+CONTACT.add_record(rec2)
+CONTACT.add_record(rec3)
+CONTACT.add_record(rec4) #дубль- не добавит
 
 @input_error
 def handler(commands):
