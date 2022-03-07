@@ -98,7 +98,7 @@ class AddressBook(UserDict):
     
     def add_record(self, *args):
         for item in args:
-            for el in self.data.keys():
+            for el in self.data:
                 if item.name.value==el.value:
                     return print("Сontact with this name exists")
             self.data[item.name] = item
@@ -168,7 +168,7 @@ def handler(commands):
         CONTACT.add_record(record)
 
     def change():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name) == commands[1]:
                 phon = Phone()
                 phon.values = commands[3]
@@ -177,7 +177,7 @@ def handler(commands):
         print("Error name")
 
     def birthday():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name) == commands[1]:
                 CONTACT.data[name].days_to_birthday()
                 return
@@ -191,7 +191,7 @@ def handler(commands):
         print(CONTACT)
 
     def delete_number():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name) == commands[1]:
                 CONTACT.data[name].delete_phone(commands[2])
                 return
@@ -202,7 +202,7 @@ def handler(commands):
 
 
     def add_more_number():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name) == commands[1]:
                 phon = Phone()
                 phon.values = commands[2]
