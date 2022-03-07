@@ -110,7 +110,7 @@ def handler(commands):
         CONTACT.add_record(record)
 
     def change():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name)==commands[1]:
               CONTACT.data[name].change_phone(commands[2],Phone(commands[3]))
               return
@@ -123,14 +123,14 @@ def handler(commands):
         print(CONTACT)
 
     def delete_number():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name)==commands[1]:
               CONTACT.data[name].delete_phone(commands[2])
               return
         print("Error name")
 
     def add_more_number():
-        for name in CONTACT.keys():
+        for name in CONTACT:
             if str(name)==commands[1]:
               CONTACT.data[name].add_phone(Phone(commands[2]))
               return
