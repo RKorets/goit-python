@@ -73,7 +73,7 @@ class Record:
                 return print(f'Birthday {self.name} Today!!!')
             elif result.days < 0:
                 result = datetime(year=today.year + 1, month=birthday.month, day=birthday.day) - today
-                return print(f'Days to br:{result.days}')
+                return print(f'Days to birthday {self.name} :{result.days}')
             else:
                 return print(f'Days to birthday {self.name}: {result.days}')
         else:
