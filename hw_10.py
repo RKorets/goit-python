@@ -1,4 +1,3 @@
-
 from collections import UserDict
 
 
@@ -30,17 +29,18 @@ class Record:
     def add_phone(self, phone: Phone):
         self.phones.append(phone)
 
-    def delete_phone(self,phone: Phone):
+    def delete_phone(self,phone):
         for el in self.phones:
              if phone==el.value:
                  self.phones.remove(el)
                  return
         print("Error number")
 
-    def change_phone(self, phone: Phone, new_phone: Phone):
-        for el in self.phones:
-             if phone==el.value:
-                 self.phones.remove(el)
+    def change_phone(self, old_phone, new_phone):
+        for number in self.phones:
+             if old_phone==number.value:
+                 new_phone = Phone(new_phone)
+                 self.phones.remove(number)
                  self.add_phone(new_phone)
                  return
         print("Error number")
@@ -95,7 +95,7 @@ rec1 = Record(Name("Roma"), Phone("23331"))
 rec5 = Record(Name("Vasua"), Phone("231"))
 rec2 = Record(Name("Dima"), Phone("3123"))
 rec3 = Record(Name("Nasa"), Phone("1122"))
-rec4 = Record(Name("Nasa"), Phone("1122")) #дубль  
+rec4 = Record(Name("Nasa"), Phone("1122")) #дубль
 CONTACT.add_record(rec1)
 CONTACT.add_record(rec5)
 CONTACT.add_record(rec2)
@@ -112,7 +112,9 @@ def handler(commands):
     def change():
         for name in CONTACT:
             if str(name)==commands[1]:
-              CONTACT.data[name].change_phone(commands[2],Phone(commands[3]))
+              new_phone = commands[3]
+              old_phone = commands[2]
+              CONTACT.data[name].change_phone(old_phone,new_phone)
               return
         print("Error name")
 
