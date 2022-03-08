@@ -112,11 +112,11 @@ class Record:
 
 class AddressBook(UserDict):
 
-    def add_record(self, item):
-            for el in self.data:
-                if item.name.value == el.value:
-                    return print("Сontact with this name exists")
-            self.data[item.name] = item
+    def add_record(self, args):
+        for contact_name in self.data:
+            if args.name == contact_name:
+                return print("Контакт з таким іменем вже існує")
+        self.data[args.name] = args
 
     def iterator(self):
         def it():
