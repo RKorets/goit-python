@@ -101,13 +101,13 @@ class Record:
 
 
 class AddressBook(UserDict):
-
+    
     def add_record(self, args):
         for contact_name in self.data:
-            if args.name.value == contact_name.value:
+            if args.name == contact_name:
                 return print("Сontact with this name exists")
-        self.data[args.name] = args
-
+        self.data[args.name] = args    
+    
     def iterator(self):
         def it():
             iter = 0
