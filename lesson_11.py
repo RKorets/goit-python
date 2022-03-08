@@ -29,7 +29,22 @@ class Phone(Field):
 
 
 class Name(Field):
-    pass
+
+    @property
+    def values(self):
+        return self.value
+
+    @values.setter
+    def values(self, new_value):
+        if len(list(new_value)) > 0:
+            user_name = []
+            for el in new_value.split(" "):
+                user_name.append(el.capitalize())
+            self.value = " ".join(user_name)
+        else:
+            print("More than one character! Try again")
+            return
+
 
 class Birthday(Field):
 
@@ -39,7 +54,8 @@ class Birthday(Field):
 
     @values.setter
     def values(self, new_value):
-        if len(list(new_value)) == 10 and int(new_value[0:4])>0 and int(new_value[5:7])>0 and int(new_value[8:10])>0:
+        if len(list(new_value)) == 10 and int(new_value[0:4]) > 0 and int(new_value[5:7]) > 0 and int(
+                new_value[8:10]) > 0:
             self.value = new_value
         else:
             print('Incorect data format! Data is not add')
@@ -81,7 +97,7 @@ class Record:
         print("Error number")
 
     def change_phone(self, phone, new_phone: Phone):
-        if new_phone.value=="":
+        if new_phone.value == "":
             return
         for el in self.phones:
             if phone == el.value:
@@ -95,11 +111,10 @@ class Record:
 
 
 class AddressBook(UserDict):
-    
-    def add_record(self, *args):
-        for item in args:
+
+    def add_record(self, item):
             for el in self.data:
-                if item.name.value==el.value:
+                if item.name.value == el.value:
                     return print("Сontact with this name exists")
             self.data[item.name] = item
 
@@ -113,7 +128,7 @@ class AddressBook(UserDict):
                 yield "\n".join(result[default:iter])
         all_contact = it()
         while True:
-             print(next(all_contact))
+            print(next(all_contact))
 
     def __str__(self) -> str:
         result = "\n".join([str(v) for v in self.data.values()])
@@ -142,29 +157,37 @@ def input_error(func):
             print("Exit")
         except StopIteration:
             print("No more contacts")
+
     return verification
 
 
 CONTACT = AddressBook()
 
-#test contact book
-rec1 = Record(Name("Roma"),Phone("23331"))
-rec5 = Record(Name("Vasua"),Phone("231"))
-rec2 = Record(Name("Dima"),Phone("3123"))
+# test contact book
+rec1 = Record(Name("Roma"), Phone("23331"))
+rec5 = Record(Name("Vasua"), Phone("231"))
+rec2 = Record(Name("Dima"), Phone("3123"))
 
 ne = Birthday()
 ne.value = "2020-05-01"
-rec3 = Record(Name("Nasa"),Phone("1122"),ne)
-CONTACT.add_record(rec5,rec1,rec2,rec3)
+rec3 = Record(Name("Nasa"), Phone("1122"), ne)
+CONTACT.add_record(rec5)
+CONTACT.add_record(rec1)
+CONTACT.add_record(rec2)
+CONTACT.add_record(rec3)
+
+
 
 @input_error
 def handler(commands):
     def new_user():
         phon = Phone()
         phon.values = commands[2]
-        br = Birthday()
-        br.values = commands[3]
-        record = Record(Name(commands[1]), phon, br)
+        birthdays = Birthday()
+        birthdays.values = commands[3]
+        name = Name()
+        name.values = commands[1]
+        record = Record(name, phon, birthdays)
         CONTACT.add_record(record)
 
     def change():
@@ -183,7 +206,6 @@ def handler(commands):
                 return
         print("Error name")
 
-
     def hello():
         print("Hello can I help you? - write 'help' show more info ")
 
@@ -199,7 +221,6 @@ def handler(commands):
 
     def pages_look():
         CONTACT.iterator()
-
 
     def add_more_number():
         for name in CONTACT:
@@ -229,7 +250,7 @@ def handler(commands):
         "more": add_more_number,
         "help": helps,
         "pages": pages_look,
-        "birthday":birthday,
+        "birthday": birthday,
         "change": change
     }[commands[0]]()
     return
