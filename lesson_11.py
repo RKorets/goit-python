@@ -73,14 +73,14 @@ class Record:
         else:
             print("Birthday not found")
 
-    def delete_phone(self, phone: Phone):
+    def delete_phone(self, phone):
         for el in self.phones:
             if phone == el.value:
                 self.phones.remove(el)
                 return
         print("Error number")
 
-    def change_phone(self, phone: Phone, new_phone: Phone):
+    def change_phone(self, phone, new_phone: Phone):
         if new_phone.value=="":
             return
         for el in self.phones:
