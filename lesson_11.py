@@ -3,26 +3,26 @@ from datetime import datetime
 
 
 class Field:
-    def __init__(self, value="") -> None:
-        self.value = value
+    def __init__(self, value) -> None:
+        self._value = value
 
     def __repr__(self) -> str:
-        return self.value
+        return self._value
 
     def __str__(self) -> str:
-        return self.value
+        return self._value
 
 
 class Phone(Field):
 
     @property
     def values(self):
-        return self.value
+        return self._value
 
     @values.setter
     def values(self, new_value):
         if len(list(new_value)) >= 9:
-            self.value = new_value
+            self._value = new_value
         else:
             print('Only 9+ numbers! Number is not add!')
             return
@@ -32,7 +32,7 @@ class Name(Field):
 
     @property
     def values(self):
-        return self.value
+        return self._value
 
     @values.setter
     def values(self, new_value):
@@ -40,7 +40,7 @@ class Name(Field):
             user_name = []
             for el in new_value.split(" "):
                 user_name.append(el.capitalize())
-            self.value = " ".join(user_name)
+            self._value = " ".join(user_name)
         else:
             print("More than one character! Try again")
             return
@@ -50,16 +50,16 @@ class Birthday(Field):
 
     @property
     def values(self):
-        return self.value
+        return self._value
 
     @values.setter
     def values(self, new_value):
         if len(list(new_value)) == 10 and int(new_value[0:4]) > 0 and int(new_value[5:7]) > 0 and int(
                 new_value[8:10]) > 0:
-            self.value = new_value
+            self._value = new_value
         else:
             print('Incorect data format! Data is not add')
-            self.value = "Not found"
+            self._value = "Not found"
             return
 
 
@@ -74,7 +74,7 @@ class Record:
         self.phones.append(phone)
 
     def days_to_birthday(self):
-        if self.birthday.value != "Not found":
+        if self.birthday._value != "Not found":
             today = datetime.today()
             birthday = datetime.strptime(str(self.birthday), '%Y-%m-%d')
             current_year = datetime(year=today.year, month=birthday.month, day=birthday.day + 1)
@@ -91,16 +91,16 @@ class Record:
 
     def delete_phone(self, phone):
         for el in self.phones:
-            if phone == el.value:
+            if phone == el._value:
                 self.phones.remove(el)
                 return
         print("Error number")
 
     def change_phone(self, phone, new_phone: Phone):
-        if new_phone.value == "":
+        if new_phone._value == "":
             return
         for el in self.phones:
-            if phone == el.value:
+            if phone == el._value:
                 self.add_phone(new_phone)
                 self.phones.remove(el)
                 return
@@ -164,28 +164,28 @@ def input_error(func):
 CONTACT = AddressBook()
 
 # test contact book
-rec1 = Record(Name("Roma"), Phone("23331"))
-rec5 = Record(Name("Vasua"), Phone("231"))
-rec2 = Record(Name("Dima"), Phone("3123"))
+# rec1 = Record(Name("Roma"), Phone("23331"))
+# rec5 = Record(Name("Vasya"), Phone("231"))
+# rec2 = Record(Name("Dima"), Phone("3123"))
 
-ne = Birthday()
-ne.value = "2020-05-01"
-rec3 = Record(Name("Nasa"), Phone("1122"), ne)
-CONTACT.add_record(rec5)
-CONTACT.add_record(rec1)
-CONTACT.add_record(rec2)
-CONTACT.add_record(rec3)
+# ne = Birthday("")
+# ne.values = "2020-05-01"
+# rec3 = Record(Name("Nasa"), Phone("1122"), ne)
+# CONTACT.add_record(rec5)
+# CONTACT.add_record(rec1)
+# CONTACT.add_record(rec2)
+# CONTACT.add_record(rec3)
 
 
 
 @input_error
 def handler(commands):
     def new_user():
-        phon = Phone()
+        phon = Phone("")
         phon.values = commands[2]
-        birthdays = Birthday()
+        birthdays = Birthday("")
         birthdays.values = commands[3]
-        name = Name()
+        name = Name("")
         name.values = commands[1]
         record = Record(name, phon, birthdays)
         CONTACT.add_record(record)
@@ -193,7 +193,7 @@ def handler(commands):
     def change():
         for name in CONTACT:
             if str(name) == commands[1]:
-                phon = Phone()
+                phon = Phone("")
                 phon.values = commands[3]
                 CONTACT.data[name].change_phone(commands[2], phon)
                 return
@@ -225,7 +225,7 @@ def handler(commands):
     def add_more_number():
         for name in CONTACT:
             if str(name) == commands[1]:
-                phon = Phone()
+                phon = Phone("")
                 phon.values = commands[2]
                 CONTACT.data[name].add_phone(phon)
                 return
