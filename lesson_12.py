@@ -5,25 +5,25 @@ import pickle
 
 class Field:
     def __init__(self, value="") -> None:
-        self.value = value
+        self._value = value
 
     def __repr__(self) -> str:
-        return self.value
+        return self._value
 
     def __str__(self) -> str:
-        return self.value
+        return self._value
 
 
 class Phone(Field):
 
     @property
     def values(self):
-        return self.value
+        return self._value
 
     @values.setter
     def values(self, new_value):
         if len(list(new_value)) >= 9:
-            self.value = new_value
+            self._value = new_value
         else:
             print('Only 9+ numbers! Number is not add!')
             return
@@ -37,7 +37,7 @@ class Birthday(Field):
 
     @property
     def values(self):
-        return self.value
+        return self._value
 
     @values.setter
     def values(self, new_value):
@@ -45,10 +45,10 @@ class Birthday(Field):
                 int(new_value[0:4]) > 0 and \
                 int(new_value[5:7]) > 0 and \
                 int(new_value[8:10]) > 0:
-            self.value = new_value
+            self._value = new_value
         else:
             print('Incorect data format!Need format yyyy-mm-dd. Data is not add')
-            self.value = "Not found"
+            self._value = "Not found"
             return
 
 
@@ -64,7 +64,7 @@ class Record:
         self.phones.append(phone)
 
     def days_to_birthday(self):
-        if self.birthday.value != "Not found":
+        if self.birthday._value != "Not found":
             today = datetime.today()
             birthday = datetime.strptime(str(self.birthday), '%Y-%m-%d')
             current_year = datetime(year=today.year, month=birthday.month, day=birthday.day + 1)
@@ -81,16 +81,16 @@ class Record:
 
     def delete_phone(self, phone: Phone):
         for contact_phone in self.phones:
-            if phone == contact_phone.value:
+            if phone == contact_phone._value:
                 self.phones.remove(contact_phone)
                 return
         print("Error number")
 
     def change_phone(self, phone: Phone, new_phone: Phone):
-        if new_phone.value == "":
+        if new_phone._value == "":
             return
         for contact_phone in self.phones:
-            if phone == contact_phone.value:
+            if phone == contact_phone._value:
                 self.add_phone(new_phone)
                 self.phones.remove(contact_phone)
                 return
