@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9.7
 
 MAINTAINER Korets Roman "vip.korets@ukr.net"
 
