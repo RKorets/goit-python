@@ -1,11 +1,9 @@
 import sys
-from pathlib import Path
 import shutil
 import re
 
 import asyncio
-import aiopath
-
+from aiopath import AsyncPath
 
 DOCUMENTS = []
 IMAGES = []
@@ -43,11 +41,11 @@ def normalize(name: str) -> str:
 
 
 def get_extension(file_name) -> str:
-    return Path(file_name).suffix[1:].upper()
+    return AsyncPath(file_name).suffix[1:].upper()
 
 
-async def scan(folder: Path):
-    folder = aiopath.AsyncPath(folder)
+async def scan(folder: AsyncPath):
+    folder = AsyncPath(folder)
     async for item in folder.iterdir():
         is_folder = await item.is_dir()
         if is_folder:
@@ -67,34 +65,35 @@ async def scan(folder: Path):
                 current_container.append(new_name)
 
             except KeyError:
-                    UNKNOWN.add(extension)
-                    OTHER.append(new_name)
+                UNKNOWN.add(extension)
+                OTHER.append(new_name)
 
 
-async def handle_file(file: Path, root_folder: Path, dist):
+async def handle_file(file: AsyncPath, root_folder: AsyncPath, dist):
     target_folder = root_folder / dist
-    target_folder.mkdir(exist_ok=True)
-    ext = Path(file).suffix
+    await target_folder.mkdir(exist_ok=True)
+    ext = AsyncPath(file).suffix
     if dist == "ARCH":
         folder_for_arch = normalize(file.name.replace(ext, ""))
         archive_folder = target_folder / folder_for_arch
-        archive_folder.mkdir(exist_ok=True) 
+        await archive_folder.mkdir(exist_ok=True)
         try:
             shutil.unpack_archive(file, archive_folder)
+            await file.unlink(missing_ok=True)
         except shutil.ReadError:
-            archive_folder.rmdir()
+            await archive_folder.rmdir()
             return
-        file.unlink()
+
     else:
         new_name = normalize(file.name.replace(ext, "")) + ext
         await file.replace(target_folder / new_name)
 
 
-async def handle_folder(folder: Path):
+async def handle_folder(folder: AsyncPath):
     try:
         await folder.rmdir()
     except OSError:
-        print(f"Failed to delete folder {folder}")
+        print(f"Не удалось удалить папку {folder}")
 
 
 async def main(folder):
@@ -118,5 +117,5 @@ async def main(folder):
 if __name__ == "__main__":
     scan_path = sys.argv[1]
     print(f"Start in folder {scan_path}")
-    sort_folder = Path(scan_path)
-    asyncio.run(main(sort_folder.resolve()))
+    sort_folder = AsyncPath(scan_path)
+    asyncio.run(main(sort_folder))
