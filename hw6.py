@@ -5,49 +5,21 @@ import shutil
 from random import randint
 
 
-def normalize(name):
-    dict = {ord('А'): 'A',ord('а'): 'a',ord('Q'): 'Q',ord('q'): 'q',
-           ord('Б'): 'B',ord('б'): 'B',ord('W'): 'W',ord('w'): 'w',
-           ord('В'): 'V',ord('в'): 'v',ord('E'): 'E',ord('e'): 'e',
-           ord('Г'): 'G',ord('г'): 'g',ord('R'): 'R',ord('r'): 'r',
-           ord('Д'): 'D',ord('д'): 'd',ord('T'): 'T',ord('t'): 't',
-           ord('Е'): 'E',ord('е'): 'e',ord('Y'): 'Y',ord('y'): 'y',
-           ord('Ё'): 'E',ord('ё'): 'e',ord('U'): 'U',ord('u'): 'u',
-           ord('Ж'): 'ZH',ord('ж'): 'zh',ord('I'): 'I',ord('i'): 'i',
-           ord('З'): 'Z',ord('з'): 'z',ord('O'): 'O',ord('o'): 'o',
-           ord('И'): 'I',ord('и'): 'i',ord('P'): 'P',ord('p'): 'p',
-           ord('К'): 'K',ord('к'): 'k',ord('A'): 'A',ord('a'): 'a',
-           ord('Л'): 'L',ord('л'): 'l',ord('S'): 'S',ord('s'): 's',
-           ord('М'): 'M',ord('м'): 'm',ord('N'): 'N',ord('n'): 'n',
-           ord('Н'): 'N',ord('н'): 'n',ord('M'): 'M',ord('m'): 'm',
-           ord('О'): 'O',ord('о'): 'o',ord('D'): 'D',ord('d'): 'd',
-           ord('П'): 'P',ord('п'): 'p',ord('F'): 'F',ord('f'): 'f',
-           ord('Р'): 'R',ord('р'): 'r',ord('G'): 'G',ord('g'): 'g',
-           ord('С'): 'S',ord('с'): 's',ord('H'): 'H',ord('h'): 'h',
-           ord('Т'): 'T', ord('т'): 't',ord('J'): 'J',ord('j'): 'j',
-           ord('У'): 'U', ord('у'): 'u',ord('K'): 'K',ord('k'): 'k',
-           ord('Ф'): 'F', ord('ф'): 'f',ord('L'): 'L',ord('l'): 'l',
-           ord('Х'): 'H', ord('х'): 'h',ord('Z'): 'Z',ord('z'): 'z',
-           ord('Ц'): 'C', ord('ц'): 'c',ord('X'): 'X',ord('x'): 'x',
-           ord('Ч'): 'CH', ord('ч'): 'ch',ord('C'): 'C',ord('c'): 'c',
-           ord('Ш'): 'SH', ord('ш'): 'sh',ord('V'): 'V',ord('v'): 'v',
-           ord('Щ'): 'SCH', ord('щ'): 'sch',ord('B'): 'B',ord('b'): 'b',
-           ord('Ь'): 'b', ord('ь'): 'b',
-           ord('Ы'): 'I', ord('ы'): 'i',
-           ord('Ъ'): 'b', ord('ь'): 'b',
-           ord('Э'): 'AE', ord('э'): 'ae',
-           ord('Ю'): 'YU', ord('ю'): 'yu',
-           ord('Я'): 'YA', ord('я'): 'ya'}
-    translated = []
-    for el in list(name):
-        if dict.get(ord(el))==None:
-            translated.append("_")
-        else:
-            translated.append(dict.get(ord(el)))
-    # вынужденное решение добавлять уникальный идентификатор так как если исходный файл например с именем IMG_1221
-    # после фильтрации по ТЗ выдаст IMG_____ тобишь если таких IMG_**** будет несколько сохранится только какой то один
-    translated.append(str(randint(0,100)))
-    return "".join(translated)
+CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
+TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+               "f", "h", "ts", "ch", "sh", "sch", "", "y", "e", "u", "ja")
+
+TRANS = {}
+
+for cs, trl in zip(CYRILLIC_SYMBOLS, TRANSLATION):
+    TRANS[ord(cs)] = trl
+    TRANS[ord(cs.upper())] = trl.upper()
+
+
+def normalize(name: str) -> str:
+    trl_name = name.translate(TRANS)
+    trl_name = re.sub(r"\W", "_", trl_name)
+    return trl_name
 
 def filterDir(path):
 
